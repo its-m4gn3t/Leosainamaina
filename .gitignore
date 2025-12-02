@@ -57,3 +57,7 @@ echo "node_modules/" >> .gitignore
 git add .gitignore
 git commit -m "Ignore leo.zip and node_modules"
 git push origin main
+
+
+leo.zip
+*.package-lock.json
