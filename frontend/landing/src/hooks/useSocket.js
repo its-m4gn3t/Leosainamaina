@@ -27,7 +27,7 @@ export const useSocket = () => {
     // });
 const BACKEND_URL =
   process.env.NODE_ENV === "production"
-    ? "https://leosainamina.onrender.com"
+    ? "https://leosainamaina.onrender.com"
     : "http://localhost:5001";
 
 socketRef.current = io(BACKEND_URL, {
