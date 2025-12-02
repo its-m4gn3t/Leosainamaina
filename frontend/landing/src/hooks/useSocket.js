@@ -25,8 +25,7 @@ export const useSocket = () => {
     //     password: 'leo123'
     //   }
     // });
-const BACKEND_URL =
-  process.env.NODE_ENV === "production"
+const BACKEND_URL = process.env.NODE_ENV === "production"
     ? "https://leosainamaina.onrender.com"
     : "http://localhost:5001";
 
