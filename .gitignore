@@ -51,3 +51,9 @@ temp/
 # Certificates
 certificates/*.pdf
 certificates/*.png
+
+echo "leo.zip" >> .gitignore
+echo "node_modules/" >> .gitignore
+git add .gitignore
+git commit -m "Ignore leo.zip and node_modules"
+git push origin main
