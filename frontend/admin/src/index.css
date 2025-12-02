@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --leo-gold: #ffd700;
+  --leo-orange: #ff8c00;
+}

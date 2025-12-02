@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom theme variables */
+:root{
+  --leo-gold: #ffd700;
+  --leo-orange: #ff8c00;
+  --leo-deep: #1f2937;
+}
+
+.hero-btn{
+  @apply px-6 py-3 rounded-full font-semibold shadow-lg;
+}
