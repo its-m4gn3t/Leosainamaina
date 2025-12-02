@@ -18,11 +18,24 @@ export const useSocket = () => {
       return;
     }
 
-    socketRef.current = io(process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5001', {
-      auth: {
-        token: localStorage.getItem('leo_admin_token')
-      }
-    });
+    // socketRef.current = io(process.env.REACT_APP_API_URL?.replace('/api', '') || 'http://localhost:5001', {
+    //   auth: {
+    //     token: localStorage.getItem('leo_admin_token')
+    //   }
+    // });
+const BACKEND_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://leosainamina.onrender.com"
+    : "http://localhost:5001";
+
+socketRef.current = io(BACKEND_URL, {
+  transports: ["websocket"],
+  auth: {
+    token: localStorage.getItem("leo_member_token"),
+    email: memberUser.email,
+    password: "leo123",
+  },
+});
 
     const socket = socketRef.current;
 
