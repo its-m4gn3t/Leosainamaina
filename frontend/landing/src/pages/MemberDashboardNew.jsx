@@ -78,7 +78,7 @@ export default function MemberDashboardNew() {
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-md">
                   <span className="text-white font-bold text-sm">L</span>
                 </div>
-                <span className="text-lg font-bold text-gray-900">Leo Club</span>
+                <span className="text-lg font-bold text-gray-900">Member Dashboard</span>
               </Link>
             </div>
             
