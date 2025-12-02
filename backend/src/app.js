@@ -25,7 +25,7 @@ const galleryRoutes = require('./routes/galleryRoutes');
 
 const app = express();
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://192.168.100.6:3000', 'http://192.168.100.6:3001'],
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'https://leosainamaina1.onrender.com', 'https://lcsadmin.onrender.com'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']

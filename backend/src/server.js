@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 5001;
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "http://localhost:3001", "https://lcsadmin.onrender.com", "https://leosainamaina1.onrender.com"],
+    origin: ["http://localhost:3000", "http://localhost:3001", "https://leosainamaina1.onrender.com", "https://lcsadmin.onrender.com"],
     methods: ["GET", "POST"]
   }
 });
