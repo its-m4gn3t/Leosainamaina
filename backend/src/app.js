@@ -1,61 +1,80 @@
+// backend/src/app.js
+const dotenv = require('dotenv');
+dotenv.config();
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const cors = require('cors');
 const errorHandler = require('./middlewares/errorHandler');
-
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
 
+// Load environment variables
 dotenv.config();
+
+// Connect to MongoDB
 connectDB();
 
-const authRoutes = require('./routes/authRoutes');
-const memberRoutes = require('./routes/memberRoutes');
-const eventRoutes = require('./routes/eventRoutes');
-const eventCategoryRoutes = require('./routes/eventCategoryRoutes');
-const qrRoutes = require('./routes/qrRoutes');
-const announcementRoutes = require('./routes/announcementRoutes');
-const certificateRoutes = require('./routes/certificateRoutes');
-const contactRoutes = require('./routes/contactRoutes');
-const attendanceRoutes = require('./routes/attendanceRoutes');
-const chatRoutes = require('./routes/chatRoutes');
-const friendRequestRoutes = require('./routes/friendRequestRoutes');
-const galleryRoutes = require('./routes/galleryRoutes');
+// -----------------------
+// Initialize Express app
+// -----------------------
+const app = express(); // <-- THIS MUST BE BEFORE ANY app.use()
 
-const app = express();
+// -----------------------
+// CORS Middleware
+// -----------------------
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://leosainamaina1.onrender.com',
+  'https://lcsadmin.onrender.com',
+];
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'https://leosainamaina1.onrender.com', 'https://lcsadmin.onrender.com'],
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // allow mobile/curl requests
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = `CORS policy: Origin ${origin} not allowed`;
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Handle preflight requests
+// Handle preflight globally
 app.options('*', cors());
+
+// -----------------------
+// Middleware
+// -----------------------
 app.use(express.json());
 
 // Static files for certificates
 app.use('/certificates', express.static('certificates'));
 
+// -----------------------
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/members', memberRoutes);
-app.use('/api/events', eventRoutes);
-app.use('/api/event-categories', eventCategoryRoutes);
-app.use('/api/qr', qrRoutes);
-app.use('/api/announcements', announcementRoutes);
-app.use('/api/certificates', certificateRoutes);
-app.use('/api/contact', contactRoutes);
-app.use('/api/attendance', attendanceRoutes);
-app.use('/api/chats', chatRoutes);
-app.use('/api/friend-requests', friendRequestRoutes);
-app.use('/api/gallery', galleryRoutes);
+// -----------------------
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/members', require('./routes/memberRoutes'));
+app.use('/api/events', require('./routes/eventRoutes'));
+app.use('/api/event-categories', require('./routes/eventCategoryRoutes'));
+app.use('/api/qr', require('./routes/qrRoutes'));
+app.use('/api/announcements', require('./routes/announcementRoutes'));
+app.use('/api/certificates', require('./routes/certificateRoutes'));
+app.use('/api/contact', require('./routes/contactRoutes'));
+app.use('/api/attendance', require('./routes/attendanceRoutes'));
+app.use('/api/chats', require('./routes/chatRoutes'));
+app.use('/api/friend-requests', require('./routes/friendRequestRoutes'));
+app.use('/api/gallery', require('./routes/galleryRoutes'));
 
 // Swagger docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Error middleware
+// Error handling middleware
 app.use(errorHandler);
 
 module.exports = app;
