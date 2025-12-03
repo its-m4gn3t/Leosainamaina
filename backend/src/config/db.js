@@ -6,9 +6,12 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+
+    // Better logging for replica sets
+    const hosts = conn.connection.hosts?.map(h => `${h.host}:${h.port}`).join(', ') || conn.connection.host;
+    console.log(`MongoDB Connected: ${conn.connection.name} @ ${hosts}`);
   } catch (error) {
-    console.error(`Error: ${error.message}`);
+    console.error(`MongoDB connection error: ${error.message}`);
     process.exit(1);
   }
 };

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bordio Style Dashboard — Responsive</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .header {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(20px);
+        padding: 16px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 100;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+        font-size: 22px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .add-task-btn {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: .25s;
+    }
+    .add-task-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .dashboard {
+        padding-top: 90px;
+        height: calc(100vh - 90px);
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .board {
+        display: flex;
+        gap: 20px;
+        padding: 0 20px 20px;
+        min-width: max-content;
+    }
+
+    .column {
+        background: rgba(255,255,255,0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 16px;
+        padding: 20px;
+        min-width: 300px;
+        width: 300px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+        border: 1px solid rgba(255,255,255,0.3);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        transition: .25s;
+    }
+
+    .column-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    .column-title {
+        font-size: 17px;
+        font-weight: 700;
+    }
+
+    .column-count {
+        background: #e0e7ff;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #4338ca;
+    }
+
+    .task-card {
+        background: white;
+        padding: 14px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        border-left: 4px solid #667eea;
+        cursor: grab;
+        box-shadow: 0 4px 15px rgba(0,0,0,.1);
+        animation: fadeIn .3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .task-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .task-card.dragging {
+        opacity: .4;
+        transform: rotate(3deg);
+    }
+
+    .task-title {
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+    .task-desc { font-size: 14px; color: #555; margin-bottom: 10px; }
+
+    .task-footer {
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+        color: #6b7280;
+    }
+
+    .priority { padding: 2px 7px; border-radius: 6px; font-size: 12px; }
+    .priority.high { background: #fee2e2; color: #dc2626; }
+    .priority.medium { background: #fef3c7; color: #d97706; }
+    .priority.low { background: #d1fae5; color: #059669; }
+
+    .add-card-btn {
+        text-align: center;
+        padding: 14px;
+        border-radius: 12px;
+        border: 2px dashed #cbd5e1;
+        cursor: pointer;
+        background: #f8fafc;
+    }
+    .add-card-btn:hover {
+        background: #e5e7eb;
+        color: #667eea;
+        border-color: #667eea;
+    }
+
+    /* --- MOBILE RESPONSIVE --- */
+    @media (max-width: 768px) {
+        .column {
+            min-width: 85vw;
+        }
+        .dashboard {
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-top: 75px;
+        }
+        .header {
+            padding: 12px 16px;
+        }
+    }
+</style>
+</head>
+
+<body>
+<div class="header">
+    <div class="logo">Bordio Dashboard</div>
+    <button class="add-task-btn" onclick="createNewTask()">+ New Task</button>
+</div>
+
+<div class="dashboard">
+    <div class="board" id="board"></div>
+</div>
+
+<script>
+const board = document.getElementById("board");
+
+const initialData = {
+    todo: [],
+    "in-progress": [],
+    review: [],
+    done: []
+};
+
+/* Load from localStorage */
+let tasks = JSON.parse(localStorage.getItem("tasks-dashboard")) || initialData;
+
+/* Column Rendering */
+const columns = [
+    { id: "todo", name: "To Do" },
+    { id: "in-progress", name: "In Progress" },
+    { id: "review", name: "Review" },
+    { id: "done", name: "Done" }
+];
+
+function saveToStorage() {
+    localStorage.setItem("tasks-dashboard", JSON.stringify(tasks));
+}
+
+function renderBoard() {
+    board.innerHTML = "";
+
+    columns.forEach(col => {
+        const columnDiv = document.createElement("div");
+        columnDiv.className = "column";
+        columnDiv.dataset.status = col.id;
+
+        columnDiv.innerHTML = `
+            <div class="column-header">
+                <div class="column-title">${col.name}</div>
+                <div class="column-count">${tasks[col.id].length}</div>
+            </div>
+        `;
+
+        /* Tasks */
+        tasks[col.id].forEach((task, index) => {
+            const card = createTaskCard(task, col.id, index);
+            columnDiv.appendChild(card);
+        });
+
+        const addBtn = document.createElement("div");
+        addBtn.className = "add-card-btn";
+        addBtn.textContent = "+ Add Task";
+        addBtn.onclick = () => addTaskToColumn(col.id);
+
+        columnDiv.appendChild(addBtn);
+
+        /* Drag Events */
+        columnDiv.addEventListener("dragover", e => e.preventDefault());
+        columnDiv.addEventListener("drop", e => dropTask(e, col.id));
+
+        board.appendChild(columnDiv);
+    });
+}
+
+function createTaskCard(task, col, index) {
+    const card = document.createElement("div");
+    card.className = "task-card";
+    card.draggable = true;
+
+    card.innerHTML = `
+        <div class="task-title">${task.title}</div>
+        <div class="task-desc">${task.description}</div>
+        <div class="task-footer">
+            <span class="priority ${task.priority}">${task.priority}</span>
+            <span>${task.date}</span>
+        </div>
+    `;
+
+    /* Drag */
+    card.addEventListener("dragstart", () => {
+        card.classList.add("dragging");
+        card.dataset.from = col;
+        card.dataset.index = index;
+    });
+    card.addEventListener("dragend", () => {
+        card.classList.remove("dragging");
+    });
+
+    /* Edit task */
+    card.addEventListener("dblclick", () => editTask(col, index));
+
+    return card;
+}
+
+/* Add Task */
+function addTaskToColumn(col) {
+    tasks[col].push({
+        title: "New Task",
+        description: "Click to edit...",
+        priority: "medium",
+        date: "Today"
+    });
+    saveToStorage();
+    renderBoard();
+}
+
+function createNewTask() {
+    const col = ["todo","in-progress","review","done"][Math.floor(Math.random()*4)];
+    addTaskToColumn(col);
+}
+
+/* Edit Task */
+function editTask(col, index) {
+    const t = tasks[col][index];
+
+    const title = prompt("Task Title:", t.title);
+    if (!title) return;
+
+    const desc = prompt("Description:", t.description) || t.description;
+    const priority = prompt("Priority: high / medium / low", t.priority) || t.priority;
+    const date = prompt("Due Date:", t.date) || t.date;
+
+    tasks[col][index] = { title, description: desc, priority, date };
+    saveToStorage();
+    renderBoard();
+}
+
+/* Drop Task */
+function dropTask(e, newCol) {
+    const dragging = document.querySelector(".dragging");
+    if (!dragging) return;
+
+    const oldCol = dragging.dataset.from;
+    const oldIndex = dragging.dataset.index;
+
+    const movedTask = tasks[oldCol].splice(oldIndex, 1)[0];
+    tasks[newCol].push(movedTask);
+
+    saveToStorage();
+    renderBoard();
+}
+
+/* Initial Render */
+renderBoard();
+</script>
+</body>
+</html>
