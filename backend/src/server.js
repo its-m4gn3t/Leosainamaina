@@ -14,10 +14,10 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      "http://localhost:3000",
-      "http://localhost:3001",
-      "https://leosainamaina1.onrender.com",
-      "https://lcsadmin.onrender.com"
+      "http://localhost:5001",
+      "https://leosainamaina.org",
+      "https://apis.leosainamaina.org",
+      "https://lcs-admin.leosainamaina.org"
     ],
     methods: ["GET", "POST"]
   }

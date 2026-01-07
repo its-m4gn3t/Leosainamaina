@@ -14,7 +14,7 @@ pkill -f "react-scripts start"
 
 # Start backend
 echo "🔧 Starting Backend Server..."
-cd backend && npm start &
+cd backend && pnpm start &
 BACKEND_PID=$!
 
 # Wait for backend to start
@@ -22,12 +22,12 @@ sleep 3
 
 # Start landing page
 echo "🌐 Starting Landing Page..."
-cd ../frontend/landing && npm start &
+cd ../frontend/landing && pnpm start &
 LANDING_PID=$!
 
 # Start admin panel
 echo "⚙️ Starting Admin Panel..."
-cd ../admin && npm start &
+cd ../admin && pnpm start &
 ADMIN_PID=$!
 
 echo ""

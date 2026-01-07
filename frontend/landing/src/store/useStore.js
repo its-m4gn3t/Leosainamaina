@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // frontend/landing/src/api/axios.js or wherever your store is
 const API_BASE = process.env.REACT_APP_API_URL 
-                 || 'https://leosainamaina.onrender.com/api'; // Render backend
+                 || 'http://localhost:5001/api'; // Render backend
 
 const api = axios.create({
   baseURL: API_BASE,

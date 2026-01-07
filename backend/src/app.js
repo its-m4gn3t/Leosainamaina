@@ -23,10 +23,10 @@ const app = express(); // <-- THIS MUST BE BEFORE ANY app.use()
 // CORS Middleware
 // -----------------------
 const allowedOrigins = [
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'https://leosainamaina1.onrender.com',
-  'https://lcsadmin.onrender.com',
+  'http://localhost:5001',
+  'https://apis.leosainamailna.org',
+  'https://lcs-admin.leosainamailna.org',
+  'https://leosainamailna.org',
 ];
 
 app.use(cors({

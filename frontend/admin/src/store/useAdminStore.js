@@ -4,8 +4,8 @@ import { io } from 'socket.io-client';
 
 // Base API URL
 // frontend/landing/src/api/axios.js or wherever your store is
-const API_BASE = process.env.REACT_APP_API_URL 
-                 || 'https://leosainamaina.onrender.com/api'; // Render backend
+const API_BASE = process.env.REACT_APP_API_URL + '/api'
+                 || 'http://localhost:5001/api'; // Render backend
 const AUTH_KEY = 'leo_admin_token';
 
 // Axios instance
