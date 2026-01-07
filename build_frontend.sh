@@ -1,4 +1,7 @@
 #!/bin/bash
 
-cd frontend/landing && pnpm build && cd -
+echo "[*] Building Landing Page.."
+cd frontend/landing && pnpm build
+cd -
+
 cd frontend/admin && pnpm build && cd -
