@@ -31,7 +31,8 @@ const { protect } = require('../middlewares/authMiddleware');
 router.post('/login', memberLogin);
 
 // Protected routes (require authentication)
-router.get('/', protect, getAllMembers);
+// router.get('/', protect, getAllMembers);
+router.get('/', getAllMembers);
 
 /**
  * @swagger
