@@ -24,9 +24,9 @@ const app = express(); // <-- THIS MUST BE BEFORE ANY app.use()
 // -----------------------
 const allowedOrigins = [
   'http://localhost:5001',
-  'https://apis.leosainamailna.org',
-  'https://lcs-admin.leosainamailna.org',
-  'https://leosainamailna.org',
+  'https://apis.leosainamaina.org',
+  'https://lcs-admin.leosainamaina.org',
+  'https://leosainamaina.org',
 ];
 
 app.use(cors({
